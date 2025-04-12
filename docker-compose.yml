@@ -17,7 +17,8 @@ services:
     volumes:
       - ./pgdata:/var/openproject/pgdata
       - ./assets:/var/openproject/assets
-
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
   backup:
     build:
       context: .
@@ -29,6 +30,8 @@ services:
       - SMB_PASS=${SMB_PASS}
       - SMB_SHARE=${SMB_SHARE}
       - BACKUP_FREQ=${BACKUP_FREQ}
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     volumes:
       - ./backups:/backups
       - ./pgdata:/var/openproject/pgdata
