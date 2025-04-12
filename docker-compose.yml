@@ -39,3 +39,7 @@ services:
     restart: always
     depends_on:
       - openproject
+networks:
+  default:
+    external:
+      name: nginx-proxy # This should be the name of your nginx-proxy network
