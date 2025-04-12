@@ -1,0 +1,38 @@
+services:
+  openproject:
+    image: openproject/openproject:15
+    container_name: openproject
+    expose:
+      - 80
+      - 443
+    restart: unless-stopped
+    environment:
+      - OPENPROJECT_SECRET_KEY_BASE=${OPENPROJECT_SECRET_KEY_BASE}
+      - OPENPROJECT_HOST__NAME=${OPENPROJECT_HOST__NAME}
+      - OPENPROJECT_HTTPS=${OPENPROJECT_HTTPS}
+      - OPENPROJECT_DEFAULT__LANGUAGE=${OPENPROJECT_DEFAULT__LANGUAGE}
+      - VIRTUAL_HOST=${VIRTUAL_HOST}
+      - LETSENCRYPT_HOST=${LETSENCRYPT_HOST}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+    volumes:
+      - ./pgdata:/var/openproject/pgdata
+      - ./assets:/var/openproject/assets
+
+  backup:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: openproject_backup
+    environment:
+      - SMB_SERVER=${SMB_SERVER}
+      - SMB_USER=${SMB_USER}
+      - SMB_PASS=${SMB_PASS}
+      - SMB_SHARE=${SMB_SHARE}
+      - BACKUP_FREQ=${BACKUP_FREQ}
+    volumes:
+      - ./backups:/backups
+      - ./pgdata:/var/openproject/pgdata
+      - ./assets:/var/openproject/assets
+    restart: always
+    depends_on:
+      - openproject
