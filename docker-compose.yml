@@ -19,6 +19,12 @@ services:
       - ./assets:/var/openproject/assets
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0" # Limita a 1 CPU
+          memory: "512M" # Limita a 512 MB de memoria
+
   backup:
     build:
       context: .
@@ -39,6 +45,11 @@ services:
     restart: always
     depends_on:
       - openproject
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5" # Limita a 0.5 CPU
+          memory: "256M" # Limita a 256 MB de memoria
 networks:
   default:
     external:
