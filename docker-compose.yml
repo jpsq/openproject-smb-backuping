@@ -23,7 +23,7 @@ services:
       resources:
         limits:
           cpus: "1.0" # Limita a 1 CPU
-          memory: "512M" # Limita a 512 MB de memoria
+          memory: "2g" # Limita a 2 GB de memoria
 
   backup:
     build:
