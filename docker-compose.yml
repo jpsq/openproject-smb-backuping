@@ -2,28 +2,23 @@ services:
   openproject:
     image: openproject/openproject:15
     container_name: openproject
-    expose:
-      - 80
-      - 443
+    ports:
+      - 85:80
     restart: unless-stopped
     environment:
       - OPENPROJECT_SECRET_KEY_BASE=${OPENPROJECT_SECRET_KEY_BASE}
       - OPENPROJECT_HOST__NAME=${OPENPROJECT_HOST__NAME}
       - OPENPROJECT_HTTPS=${OPENPROJECT_HTTPS}
       - OPENPROJECT_DEFAULT__LANGUAGE=${OPENPROJECT_DEFAULT__LANGUAGE}
-      - VIRTUAL_HOST=${VIRTUAL_HOST}
-      - LETSENCRYPT_HOST=${LETSENCRYPT_HOST}
-      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
     volumes:
       - ./pgdata:/var/openproject/pgdata
       - ./assets:/var/openproject/assets
       - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
     deploy:
       resources:
         limits:
-          cpus: "1.0" # Limita a 1 CPU
-          memory: "2g" # Limita a 2 GB de memoria
+          cpus: "2.0" # Limita a 2 CPU
+          memory: "4g" # Limita a 3 GB de memoria
 
   backup:
     build:
@@ -37,7 +32,6 @@ services:
       - SMB_SHARE=${SMB_SHARE}
       - BACKUP_FREQ=${BACKUP_FREQ}
       - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
     volumes:
       - ./backups:/backups
       - ./pgdata:/var/openproject/pgdata
@@ -50,7 +44,3 @@ services:
         limits:
           cpus: "0.5" # Limita a 0.5 CPU
           memory: "256M" # Limita a 256 MB de memoria
-networks:
-  default:
-    external:
-      name: nginx-proxy # This should be the name of your nginx-proxy network
